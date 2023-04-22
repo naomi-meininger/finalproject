@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+	<title>Search Feature</title>
+	<meta charset="utf-8"/>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel ="stylesheet" href = "style.css"/>
+</head>
+<body>
+	<h1>Search for Exercises</h1>
+    <nav>
+        <ul class="nav"> 
+          <li>  <a href="index.html"> Home </a> </li>
+          <li> <a href="track.html"> Track your Workouts </a></li>
+          <li> <a href="search.html"> Search for Exercises </a></li>
+    
+        </ul>
+      </nav>
+    <form>
+        <p> 
+            Search by Muscle: 
+            <select name="muscles" id="muscles">
+                <option value="select"> Select</option> 
+                <option value="abdominals"> Abdominals</option>
+                <option value="abductors">Abductors</option>
+                <option value="adductors">Adductors</option>
+                <option value="biceps">Biceps</option>
+                <option value="calves">Calves</option>
+                <option value="chest">Chest</option>
+                <option value="forearms">Forearms</option>
+                <option value="glutes">Glutes</option>
+                <option value="lats">Lats</option>
+                <option value="lower_back">Lower back</option>
+                <option value="middle_back">Middle Back</option>
+                <option value="neck">Neck</option>
+                <option value="quadriceps">Quadriceps</option>
+                <option value="traps">Traps</option>
+                <option value="triceps">Triceps</option>
+              </select>
+            </br>   </br>
+            Search by Difficulty
+        <select name="difficulty" id="difficulty">
+            <option value="select"> Select</option> 
+            <option value="beginner"> Beginner</option> 
+            <option value="intermediate"> Intermediate</option> 
+            <option value="expert">  Expert</option>
+        </select>
+        <br>  <br>
+        Search by Type:
+        <select name="type" id="type">
+            <option value="select"> Select</option> 
+            <option value="cardio"> Cardio</option> 
+            <option value="olympic_weightlifting"> Olympic Weight Lifting</option> 
+            <option value="plyometrics"> Plyometrics</option> 
+            <option value="powerlifting">  Powerlifting </option>
+            <option value="strength">  Strength</option>
+            <option value="stretching">  Stretching </option>
+            <option value="stringman">  Stringman</option>
+        </select>
+        </br>
+        </p>
+        <input type = "button" value = "Search" />
+
+        <div id = "body text">
+        </div>
+
+
+    </form>
+    <script> 
+   document.querySelectorAll('input[type="button"]') [0].addEventListener("click",function(){
+                   
+            
+
+        let muscle = document.querySelector('#muscles').value;
+        let diff= document.querySelector('#difficulty').value;
+        let type= document.querySelector('#type').value;
+        if(muscle != "select" && diff== "select"){
+           param = "muscle=" + muscle;
+        }
+        if(muscle == "select" && diff != "select"){
+           param =  "difficulty=" + diff;
+        }
+
+        if(muscle != "select" && diff != "select"){
+           param = "muscle=" + muscle + "&difficulty=" + diff;
+        }
+        if(muscle == "select" && diff == "select" && type != "select"){
+            param =  "type=" + type;
+        }
+        if(muscle != "select" && diff != "select" && type != "select"){
+            param = "muscle=" + muscle + "&difficulty=" + diff + "&type=" + type;
+        }
+        $.ajax({
+                        method: 'GET',
+                        url: 'https://api.api-ninjas.com/v1/exercises?' + param,
+                        headers: { 'X-Api-Key': 'zPDJL5tOd8kl3L40tvTx4w==zN1xxx6DaZjEqE2c'},
+                        contentType: 'application/json',
+                        success: function(result) {
+                             str = "<h3> Recommended Exercises </h3>";
+                            result = JSON.stringify(result);
+                            res = JSON.parse(result);
+                            console.log(res.length);
+                            for(i = 0; i < res.length;i++){
+                                str = str + "<b>" +res[i]["name"] + " </b> <br>" +  res[i]["instructions"]+ "<br> <br>";
+                            }
+
+
+                          document.getElementById("body text").innerHTML = str;
+                                
+                        },
+                        error: function ajaxError(jqXHR) {
+                            console.error('Error: ', jqXHR.responseText);
+                        }
+        });
+    
+   });
+    </script> 
+</body>
+</html>
